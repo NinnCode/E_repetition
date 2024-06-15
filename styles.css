@@ -31,6 +31,10 @@
     position: relative;
 }
 
+#buttons button#StopButton {
+    background: rgb(236, 40, 5);
+}
+
 #buttons button {
     background: #4da6ff;
     border: none;
@@ -44,9 +48,8 @@
     border-radius: 50px;
 }
 
-#buttons button#stop {
-    background: #f00;
-}
+
+
 
 .inputLabel {
     font-size: 14px;

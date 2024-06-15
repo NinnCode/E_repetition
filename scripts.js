@@ -17,19 +17,31 @@ document.addEventListener('DOMContentLoaded', function () {
     let isRepeating;
     let selectedVoice;
     
-
     const synth = window.speechSynthesis;
 
     function populateVoiceList() {
         const voices = synth.getVoices();
-        voiceComboBox.innerHTML = voices.map(voice => `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`).join('');
-        voiceComboBox.value = voices.find(voice => voice.lang === 'en-US')?.name || '';
-        
+        if (voices.length > 0) {
+            voiceComboBox.innerHTML = voices.map(voice => `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`).join('');
+            const defaultVoice = voices.find(voice => voice.lang === 'en-US');
+            if (defaultVoice) {
+                voiceComboBox.value = defaultVoice.name;
+            }
+        } else {
+            voiceComboBox.innerHTML = '<option value="">No voices available</option>';
+            voiceComboBox.disabled = true;
+            speakButton.disabled = true;
+        }
     }
 
-    populateVoiceList();
+    // Ensure voices list is populated after voiceschanged event
     if (speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = populateVoiceList;
+        speechSynthesis.onvoiceschanged = function() {
+            populateVoiceList();
+        };
+    } else {
+        // Fallback for browsers that do not support onvoiceschanged event
+        populateVoiceList();
     }
 
     speakButton.addEventListener('click', function () {
